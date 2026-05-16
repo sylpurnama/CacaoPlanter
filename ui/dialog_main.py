@@ -47,7 +47,8 @@ from ..core.planting_engine import (
 class CacaoDialog(QDialog):
     """
     Main plugin dialog — 3 tabs:
-        ⚙  Parameters  : field boundary, raster input, planting pattern, shade trees, CRS
+        ⚙  Parameters  : field boundary, raster input, planting pattern,
+                          shade trees, CRS
         📁  Output      : project name, directory, export formats
         📊  Summary     : calculation results and population statistics
     """
@@ -84,17 +85,17 @@ class CacaoDialog(QDialog):
 
         self.tabs = QTabWidget()
         self.tabs.addTab(self._tab_parameters(), "  Parameters")
-        self.tabs.addTab(self._tab_output(),     "  Output")
-        self.tabs.addTab(self._tab_summary(),    "  Summary")
+        self.tabs.addTab(self._tab_output(), "  Output")
+        self.tabs.addTab(self._tab_summary(), "  Summary")
         main_layout.addWidget(self.tabs)
 
         # Action buttons
         btn_row = QHBoxLayout()
         btn_row.setSpacing(8)
 
-        self.btn_close    = QPushButton("Close")
+        self.btn_close = QPushButton("Close")
         self.btn_close.clicked.connect(self.close)
-        self.btn_preview  = QPushButton("Quick Estimate")
+        self.btn_preview = QPushButton("Quick Estimate")
         self.btn_generate = QPushButton("  Generate Planting Points")
         self.btn_generate.setDefault(True)
         fnt = QFont()
@@ -170,7 +171,8 @@ class CacaoDialog(QDialog):
         layout.addWidget(grp_field)
 
         # ── 2. Raster Input ───────────────────────────────────────────
-        grp_raster = QGroupBox("2  ·  Raster Input  (DEM / Ortophoto / Satellite)")
+        grp_raster = QGroupBox(
+            "2  ·  Raster Input  (DEM / Ortophoto / Satellite)")
         grp_raster.setToolTip(
             "Supports all common raster types:\n"
             "• DTM/DSM from drone (Metashape, ODM, Pix4D)\n"
@@ -185,8 +187,10 @@ class CacaoDialog(QDialog):
             self.cb_raster_type.addItem(label, key)
         self.cb_raster_type.setToolTip(
             "Select the raster type being used.\n"
-            "Ortophoto/RGB → used as visual basemap only, slope NOT analysed.\n"
-            "DTM/DSM Drone → slope analysis performed, high resolution recommended.\n"
+            "Ortophoto/RGB → used as visual basemap only, "
+            "slope NOT analysed.\n"
+            "DTM/DSM Drone → slope analysis performed, "
+            "high resolution recommended.\n"
             "SRTM → 30m resolution, use only when drone data is unavailable."
         )
         form2.addRow("Raster type:", self.cb_raster_type)
@@ -200,7 +204,7 @@ class CacaoDialog(QDialog):
         )
         form2.addRow("Raster layer:", self.cb_dem)
 
-        self.lbl_band  = QLabel("Elevation band:")
+        self.lbl_band = QLabel("Elevation band:")
         self.spin_band = QSpinBox()
         self.spin_band.setRange(1, 10)
         self.spin_band.setValue(1)
@@ -218,13 +222,14 @@ class CacaoDialog(QDialog):
         )
         form2.addRow("", self.lbl_raster_info)
 
-        self.lbl_slope  = QLabel("Maximum slope:")
+        self.lbl_slope = QLabel("Maximum slope:")
         self.spin_slope = QDoubleSpinBox()
         self.spin_slope.setRange(5.0, 60.0)
         self.spin_slope.setValue(25.0)
         self.spin_slope.setSuffix(" %")
         self.spin_slope.setToolTip(
-            "Points in areas steeper than this value will be marked as excluded.\n"
+            "Points in areas steeper than this value will be "
+            "marked as excluded.\n"
             "Recommended for cacao: ≤ 25%  |  Undulating terrain: 15–20%"
         )
         form2.addRow(self.lbl_slope, self.spin_slope)
@@ -287,14 +292,16 @@ class CacaoDialog(QDialog):
         self.spin_shade_ratio.setValue(3)
         self.spin_shade_ratio.setPrefix("1 shade : ")
         self.spin_shade_ratio.setSuffix(" cacao")
-        self.spin_shade_ratio.setToolTip("Standard ratio: 1 shade tree per 3 cacao trees")
+        self.spin_shade_ratio.setToolTip(
+            "Standard ratio: 1 shade tree per 3 cacao trees")
         form4.addRow("Ratio:", self.spin_shade_ratio)
 
         self.spin_shade_buffer = QDoubleSpinBox()
         self.spin_shade_buffer.setRange(1.0, 8.0)
         self.spin_shade_buffer.setValue(2.0)
         self.spin_shade_buffer.setSuffix(" m")
-        self.spin_shade_buffer.setToolTip("Minimum spacing between shade tree points")
+        self.spin_shade_buffer.setToolTip(
+            "Minimum spacing between shade tree points")
         form4.addRow("Minimum buffer:", self.spin_shade_buffer)
 
         layout.addWidget(grp_shade)
@@ -310,7 +317,8 @@ class CacaoDialog(QDialog):
         )
         self.crs_selector.setToolTip(
             "Select the output CRS for generated point layers.\n"
-            "Use a projected CRS (UTM or local) for accurate distance calculations.\n"
+            "Use a projected CRS (UTM or local) for accurate "
+            "distance calculations.\n"
             "Click the globe icon to browse all available CRS options."
         )
         form5.addRow("Output CRS:", self.crs_selector)
@@ -332,7 +340,8 @@ class CacaoDialog(QDialog):
         grp_name = QGroupBox("Project Name")
         form = QFormLayout(grp_name)
         self.txt_project_name = QLineEdit("Cacao_Project")
-        self.txt_project_name.setToolTip("Prefix used for all output file names")
+        self.txt_project_name.setToolTip(
+            "Prefix used for all output file names")
         form.addRow("File name prefix:", self.txt_project_name)
         layout.addWidget(grp_name)
 
@@ -355,10 +364,13 @@ class CacaoDialog(QDialog):
         )
         fmt_layout = QVBoxLayout(grp_fmt)
 
-        self.chk_shp  = QCheckBox("Shapefile (.shp)      —  standard GIS format")
+        self.chk_shp = QCheckBox(
+            "Shapefile (.shp)      —  standard GIS format")
         self.chk_gpkg = QCheckBox("GeoPackage (.gpkg)  —  recommended")
-        self.chk_kml  = QCheckBox("KML (.kml)               —  Google Earth / field use")
-        self.chk_dxf  = QCheckBox("DXF (.dxf)                —  AutoCAD / survey software")
+        self.chk_kml = QCheckBox(
+            "KML (.kml)               —  Google Earth / field use")
+        self.chk_dxf = QCheckBox(
+            "DXF (.dxf)                —  AutoCAD / survey software")
         self.chk_shp.setChecked(True)
         self.chk_gpkg.setChecked(True)
         for c in [self.chk_shp, self.chk_gpkg, self.chk_kml, self.chk_dxf]:
@@ -391,7 +403,8 @@ class CacaoDialog(QDialog):
     # ------------------------------------------------------------------
 
     def _connect_signals(self):
-        self.cb_raster_type.currentIndexChanged.connect(self._on_raster_type_changed)
+        self.cb_raster_type.currentIndexChanged.connect(
+            self._on_raster_type_changed)
         self._on_raster_type_changed()
 
     def _on_raster_type_changed(self):
@@ -405,17 +418,35 @@ class CacaoDialog(QDialog):
         self.spin_band.setVisible(not is_basemap)
 
         if rtype == "dtm_drone":
-            info = "DTM Drone: cm–m resolution, high accuracy. Slope analysed per pixel."
+            info = (
+                "DTM Drone: cm–m resolution, high accuracy. "
+                "Slope analysed per pixel."
+            )
         elif rtype == "dsm_drone":
-            info = "DSM Drone: includes vegetation height. Slope may be overestimated in tall canopy areas."
+            info = (
+                "DSM Drone: includes vegetation height. "
+                "Slope may be overestimated in tall canopy areas."
+            )
         elif rtype in BASEMAP_TYPE_KEYS:
-            info = "Ortophoto: used as visual basemap only. Slope analysis is NOT performed."
+            info = (
+                "Ortophoto: used as visual basemap only. "
+                "Slope analysis is NOT performed."
+            )
         elif rtype == "srtm":
-            info = "SRTM 30m: suitable for estimation; limited precision on gently undulating terrain."
+            info = (
+                "SRTM 30m: suitable for estimation; limited precision "
+                "on gently undulating terrain."
+            )
         elif rtype == "lidar_dtm":
-            info = "LiDAR DTM: very high accuracy. Ensure CRS matches the project projection."
+            info = (
+                "LiDAR DTM: very high accuracy. "
+                "Ensure CRS matches the project projection."
+            )
         else:
-            info = "Other elevation raster. Ensure the layer is projected and georeferenced."
+            info = (
+                "Other elevation raster. "
+                "Ensure the layer is projected and georeferenced."
+            )
         self.lbl_raster_info.setText(info)
 
     # ------------------------------------------------------------------
@@ -430,7 +461,7 @@ class CacaoDialog(QDialog):
 
     def get_raster_info(self) -> RasterInputInfo:
         rtype = self.cb_raster_type.currentData() or "dtm_drone"
-        band  = self.spin_band.value()
+        band = self.spin_band.value()
         return RasterInputInfo(tipe_key=rtype, band_elevasi=band)
 
     def get_pola(self) -> str:
@@ -476,10 +507,14 @@ class CacaoDialog(QDialog):
 
     def get_formats_export(self) -> list:
         fmt = []
-        if self.chk_shp.isChecked():  fmt.append("shapefile")
-        if self.chk_gpkg.isChecked(): fmt.append("geopackage")
-        if self.chk_kml.isChecked():  fmt.append("kml")
-        if self.chk_dxf.isChecked():  fmt.append("dxf")
+        if self.chk_shp.isChecked():
+            fmt.append("shapefile")
+        if self.chk_gpkg.isChecked():
+            fmt.append("geopackage")
+        if self.chk_kml.isChecked():
+            fmt.append("kml")
+        if self.chk_dxf.isChecked():
+            fmt.append("dxf")
         return fmt
 
     # ------------------------------------------------------------------
@@ -489,37 +524,50 @@ class CacaoDialog(QDialog):
     def tampilkan_ringkasan(self, result):
         rtype_label = self.cb_raster_type.currentText()
         pattern_label = self.get_pola().replace("_", " ").title()
-        teks = (
-            "=" * 50 + "\n"
-            "  CACAOPLANTER  —  RESULTS\n"
-            "=" * 50 + "\n\n"
-            f"  Field area         : {result.luas_ha:.2f} ha\n"
-            f"  Planting pattern   : {pattern_label}\n"
-            f"  Spacing (row×col)  : {self.get_jarak_baris()} × {self.get_jarak_kolom()} m\n"
-            f"  Raster input       : {rtype_label[:45]}\n\n"
-            + "-" * 50 + "\n"
-            f"  Cacao points       : {result.jumlah_kakao:>8,} trees\n"
-            f"  Shade tree points  : {result.jumlah_penaung:>8,} trees\n"
-            f"  Excluded zones     : {result.jumlah_excluded:>8,} points\n\n"
-            f"  Cacao density      : {result.kepadatan_kakao_per_ha} trees/ha\n"
-            f"  Shade density      : {result.kepadatan_penaung_per_ha} trees/ha\n"
-            + "=" * 50
-        )
+        sep1 = "=" * 50
+        sep2 = "-" * 50
+        teks = "\n".join([
+            sep1,
+            "  CACAOPLANTER  —  RESULTS",
+            sep1,
+            "",
+            f"  Field area         : {result.luas_ha:.2f} ha",
+            f"  Planting pattern   : {pattern_label}",
+            (
+                f"  Spacing (row×col)  : "
+                f"{self.get_jarak_baris()} × {self.get_jarak_kolom()} m"
+            ),
+            f"  Raster input       : {rtype_label[:45]}",
+            "",
+            sep2,
+            f"  Cacao points       : {result.jumlah_kakao:>8,} trees",
+            f"  Shade tree points  : {result.jumlah_penaung:>8,} trees",
+            f"  Excluded zones     : {result.jumlah_excluded:>8,} points",
+            "",
+            f"  Cacao density      : {result.kepadatan_kakao_per_ha} trees/ha",
+            f"  Shade density      : "
+            f"{result.kepadatan_penaung_per_ha} trees/ha",
+            sep1,
+        ])
         self.txt_summary.setText(teks)
         self.tabs.setCurrentIndex(2)
 
-    def tampilkan_estimasi(self, luas_ha: float, est_kakao: int, est_penaung: int):
-        teks = (
-            "=" * 50 + "\n"
-            "  QUICK ESTIMATE  (no layer generated yet)\n"
-            "=" * 50 + "\n\n"
-            f"  Field area          : {luas_ha:.2f} ha\n"
-            f"  Estimated cacao     : ±{est_kakao:,} trees\n"
-            f"  Estimated shade     : ±{est_penaung:,} trees\n\n"
-            "  Click 'Generate Planting Points' for\n"
-            "  accurate results with per-point slope analysis.\n"
-            + "=" * 50
-        )
+    def tampilkan_estimasi(
+            self, luas_ha: float, est_kakao: int, est_penaung: int):
+        sep = "=" * 50
+        teks = "\n".join([
+            sep,
+            "  QUICK ESTIMATE  (no layer generated yet)",
+            sep,
+            "",
+            f"  Field area          : {luas_ha:.2f} ha",
+            f"  Estimated cacao     : ±{est_kakao:,} trees",
+            f"  Estimated shade     : ±{est_penaung:,} trees",
+            "",
+            "  Click 'Generate Planting Points' for",
+            "  accurate results with per-point slope analysis.",
+            sep,
+        ])
         self.txt_summary.setText(teks)
         self.tabs.setCurrentIndex(2)
 

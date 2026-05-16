@@ -19,9 +19,7 @@ from typing import Optional
 from qgis.core import (
     QgsVectorLayer,
     QgsVectorFileWriter,
-    QgsCoordinateReferenceSystem,
     QgsCoordinateTransformContext,
-    QgsProject,
 )
 
 
@@ -32,14 +30,14 @@ class Exporter:
     Example::
         exporter = Exporter(output_dir="/home/user/cacao_output")
         exporter.export_shapefile(cacao_layer, "BlockA_Cacao")
-        exporter.export_kml(cacao_layer,       "BlockA_Cacao")
+        exporter.export_kml(cacao_layer, "BlockA_Cacao")
     """
 
     FORMAT_MAP = {
-        "shapefile":  ("ESRI Shapefile", ".shp"),
-        "geopackage": ("GPKG",           ".gpkg"),
-        "kml":        ("KML",            ".kml"),
-        "dxf":        ("DXF",            ".dxf"),
+        "shapefile": ("ESRI Shapefile", ".shp"),
+        "geopackage": ("GPKG", ".gpkg"),
+        "kml": ("KML", ".kml"),
+        "dxf": ("DXF", ".dxf"),
     }
 
     def __init__(self, output_dir: str):
@@ -47,33 +45,33 @@ class Exporter:
         os.makedirs(output_dir, exist_ok=True)
 
     def export_shapefile(self, layer: QgsVectorLayer,
-                          file_name: str, crs_epsg: int = 4326) -> str:
+                         file_name: str, crs_epsg: int = 4326) -> str:
         return self._export(layer, file_name, "shapefile", crs_epsg)
 
     def export_geopackage(self, layer: QgsVectorLayer,
-                           file_name: str, crs_epsg: int = 4326) -> str:
+                          file_name: str, crs_epsg: int = 4326) -> str:
         return self._export(layer, file_name, "geopackage", crs_epsg)
 
     def export_kml(self, layer: QgsVectorLayer, file_name: str) -> str:
         return self._export(layer, file_name, "kml", crs_epsg=4326)
 
     def export_dxf(self, layer: QgsVectorLayer,
-                    file_name: str, crs_epsg: int = 4326) -> str:
+                   file_name: str, crs_epsg: int = 4326) -> str:
         return self._export(layer, file_name, "dxf", crs_epsg)
 
     def export_semua(self,
-                      layer_kakao:    QgsVectorLayer,
-                      layer_penaung:  Optional[QgsVectorLayer],
-                      layer_excluded: Optional[QgsVectorLayer],
-                      nama_proyek:    str,
-                      formats:        list) -> dict:
+                     layer_kakao: QgsVectorLayer,
+                     layer_penaung: Optional[QgsVectorLayer],
+                     layer_excluded: Optional[QgsVectorLayer],
+                     nama_proyek: str,
+                     formats: list) -> dict:
         """Export all layers in the selected formats."""
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        hasil     = {}
+        hasil = {}
 
         pairs = [
-            (layer_kakao,    f"{nama_proyek}_Cacao_{timestamp}"),
-            (layer_penaung,  f"{nama_proyek}_Shade_{timestamp}"),
+            (layer_kakao, f"{nama_proyek}_Cacao_{timestamp}"),
+            (layer_penaung, f"{nama_proyek}_Shade_{timestamp}"),
             (layer_excluded, f"{nama_proyek}_Excluded_{timestamp}"),
         ]
 
@@ -91,20 +89,20 @@ class Exporter:
         return hasil
 
     def _export(self, layer: QgsVectorLayer,
-                 file_name: str, format_key: str,
-                 crs_epsg: int = 4326) -> str:
+                file_name: str, format_key: str,
+                crs_epsg: int = 4326) -> str:
         if format_key not in self.FORMAT_MAP:
             raise ValueError(
                 f"Unknown format '{format_key}'. "
                 f"Options: {list(self.FORMAT_MAP.keys())}"
             )
 
-        driver, ext  = self.FORMAT_MAP[format_key]
-        output_path  = os.path.join(self.output_dir, file_name + ext)
+        driver, ext = self.FORMAT_MAP[format_key]
+        output_path = os.path.join(self.output_dir, file_name + ext)
 
-        options               = QgsVectorFileWriter.SaveVectorOptions()
-        options.driverName    = driver
-        options.fileEncoding  = "UTF-8"
+        options = QgsVectorFileWriter.SaveVectorOptions()
+        options.driverName = driver
+        options.fileEncoding = "UTF-8"
 
         if format_key == "kml":
             options.datasourceOptions = ["NameField=type"]
@@ -118,7 +116,8 @@ class Exporter:
 
         if error != QgsVectorFileWriter.NoError:
             raise RuntimeError(
-                f"Export to {format_key} failed: {error_msg}\nPath: {output_path}"
+                f"Export to {format_key} failed: "
+                f"{error_msg}\nPath: {output_path}"
             )
 
         return output_path

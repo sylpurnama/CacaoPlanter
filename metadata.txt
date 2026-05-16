@@ -9,18 +9,18 @@ email=sylpurnama@polteksimasberau.ac.id
 
 about=CacaoPlanter helps agronomy and GIS teams plan cacao planting layouts directly in QGIS.
 
-  Key features:
-  - Generate planting points (triangular and square grid patterns)
-  - Shade tree planning with configurable ratio and buffer
-  - Slope analysis from elevation rasters (DTM, DSM, SRTM, LiDAR, drone DEM)
-  - Global CRS selector for projected coordinate systems worldwide
-  - CRS-aware distance calculations for accurate spacing
-  - Planting block grid layer (fishnet) aligned to row and column spacing
-  - Population density statistics per hectare (trees/ha)
-  - Multi-format export: Shapefile, GeoPackage, KML, and DXF
-  - Background processing using QgsTask to keep the interface responsive
+    Key features:
+    - Generate planting points (triangular / square grid patterns)
+    - Shade tree planning with configurable ratio and buffer
+    - Slope analysis from any elevation raster: DTM/DSM Drone (Metashape, ODM, Pix4D), SRTM, LiDAR DTM, or skip if no DEM
+    - Global CRS selector — works with any projected coordinate system worldwide
+    - CRS-aware distance calculation for accurate spacing
+    - Planting block grid layer (fishnet) aligned to row/column spacing
+    - Population density statistics per hectare (trees/ha)
+    - Multi-format export: Shapefile, GeoPackage, KML, DXF
+    - Background processing via QgsTask — UI stays responsive during generation
 
-  License: GPL-2.0-or-later
+    Licence: GPL-2.0-or-later
 
 tracker=https://github.com/sylpurnama/CacaoPlanter/issues
 repository=https://github.com/sylpurnama/CacaoPlanter

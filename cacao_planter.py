@@ -36,16 +36,18 @@ from .core.exporter import Exporter
 # ---------------------------------------------------------------------------
 
 class GenerateTask(QgsTask):
-    """Run PlantingEngine in a background thread so the QGIS UI stays responsive."""
+    """Run PlantingEngine in a background thread so the QGIS UI stays
+    responsive.
+    """
 
     def __init__(self, description, cfg, geom_lahan, polygon_crs, dem_layer):
         super().__init__(description, QgsTask.CanCancel)
-        self.cfg         = cfg
-        self.geom_lahan  = geom_lahan
+        self.cfg = cfg
+        self.geom_lahan = geom_lahan
         self.polygon_crs = polygon_crs
-        self.dem_layer   = dem_layer
-        self.result      = None
-        self.error_msg   = None
+        self.dem_layer = dem_layer
+        self.result = None
+        self.error_msg = None
 
     def run(self):
         try:
@@ -64,15 +66,15 @@ class GenerateTask(QgsTask):
 
 class CacaoPlanter:
 
-    PLUGIN_NAME    = "CacaoPlanter"
+    PLUGIN_NAME = "CacaoPlanter"
     PLUGIN_VERSION = "1.5"
 
     def __init__(self, iface):
-        self.iface       = iface
-        self.plugin_dir  = os.path.dirname(__file__)
+        self.iface = iface
+        self.plugin_dir = os.path.dirname(__file__)
         self.dialog: Optional[CacaoDialog] = None
-        self.actions     = []
-        self.menu        = self.PLUGIN_NAME
+        self.actions = []
+        self.menu = self.PLUGIN_NAME
         self._active_task: Optional[GenerateTask] = None
 
         self.toolbar = self.iface.addToolBar(self.PLUGIN_NAME)
@@ -140,17 +142,18 @@ class CacaoPlanter:
             self._error("No valid polygon layer selected.")
             return
 
-        features = (list(polygon_layer.selectedFeatures())
-                    or list(polygon_layer.getFeatures()))
+        features = list(polygon_layer.selectedFeatures())
+        if not features:
+            features = list(polygon_layer.getFeatures())
         if not features:
             self._error("Polygon layer is empty — no features found.")
             return
 
         polygon_crs = polygon_layer.crs()
 
-        geom_list  = [f.geometry() for f in features]
-        geom_field = geom_list[0] if len(geom_list) == 1 \
-                     else QgsGeometry.unaryUnion(geom_list)
+        geom_list = [f.geometry() for f in features]
+        geom_field = (geom_list[0] if len(geom_list) == 1
+                      else QgsGeometry.unaryUnion(geom_list))
 
         if geom_field is None or geom_field.isEmpty():
             self._error("Polygon geometry is empty or invalid.")
@@ -159,7 +162,8 @@ class CacaoPlanter:
         if geom_field.area() <= 0:
             self._error(
                 "Polygon area = 0.\n"
-                "Make sure the layer uses a projected CRS (not geographic degrees)."
+                "Make sure the layer uses a projected CRS "
+                "(not geographic degrees)."
             )
             return
 
@@ -203,19 +207,19 @@ class CacaoPlanter:
             return
 
         self._status("Building layers…")
-        builder      = LayerBuilder(crs_epsg=result.crs_epsg_hasil)
-        lyr_cacao    = builder.buat_layer_kakao(result)
-        lyr_shade    = builder.buat_layer_penaung(result)
+        builder = LayerBuilder(crs_epsg=result.crs_epsg_hasil)
+        lyr_cacao = builder.buat_layer_kakao(result)
+        lyr_shade = builder.buat_layer_penaung(result)
         lyr_excluded = builder.buat_layer_excluded(result)
 
-        root      = QgsProject.instance().layerTreeRoot()
+        root = QgsProject.instance().layerTreeRoot()
         old_group = root.findGroup(self.PLUGIN_NAME)
         if old_group:
             root.removeChildNode(old_group)
 
         group = root.insertGroup(0, self.PLUGIN_NAME)
-        QgsProject.instance().addMapLayer(lyr_cacao,  False)
-        QgsProject.instance().addMapLayer(lyr_shade,  False)
+        QgsProject.instance().addMapLayer(lyr_cacao, False)
+        QgsProject.instance().addMapLayer(lyr_shade, False)
         group.addLayer(lyr_shade)
         group.addLayer(lyr_cacao)
 
@@ -283,7 +287,9 @@ class CacaoPlanter:
                 if cfg.pola == "segitiga" else dx * dy
             )
             est_cacao = int(area_ha * 10_000 / area_per_tree)
-            est_shade = est_cacao // cfg.penaung_rasio if cfg.penaung_aktif else 0
+            est_shade = (
+                est_cacao // cfg.penaung_rasio if cfg.penaung_aktif else 0
+            )
 
             self.dialog.tampilkan_estimasi(area_ha, est_cacao, est_shade)
 
@@ -298,16 +304,16 @@ class CacaoPlanter:
         try:
             ri = self.dialog.get_raster_info()
             return PlantingConfig(
-                pola            = self.dialog.get_pola(),
-                jarak_baris     = self.dialog.get_jarak_baris(),
-                jarak_kolom     = self.dialog.get_jarak_kolom(),
-                penaung_aktif   = self.dialog.get_penaung_aktif(),
-                penaung_jenis   = self.dialog.get_penaung_jenis(),
-                penaung_rasio   = self.dialog.get_penaung_rasio(),
-                penaung_buffer  = self.dialog.get_penaung_buffer(),
-                slope_maks      = self.dialog.get_slope_maks(),
-                raster_dem_info = ri,
-                output_crs_epsg = self.dialog.get_crs_epsg(),
+                pola=self.dialog.get_pola(),
+                jarak_baris=self.dialog.get_jarak_baris(),
+                jarak_kolom=self.dialog.get_jarak_kolom(),
+                penaung_aktif=self.dialog.get_penaung_aktif(),
+                penaung_jenis=self.dialog.get_penaung_jenis(),
+                penaung_rasio=self.dialog.get_penaung_rasio(),
+                penaung_buffer=self.dialog.get_penaung_buffer(),
+                slope_maks=self.dialog.get_slope_maks(),
+                raster_dem_info=ri,
+                output_crs_epsg=self.dialog.get_crs_epsg(),
             )
         except Exception as e:
             self._error(f"Invalid configuration:\n{e}")
