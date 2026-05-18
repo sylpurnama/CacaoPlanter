@@ -2,7 +2,7 @@
 
 **CacaoPlanter** — Generate cacao and shade tree planting points with configurable patterns, topography analysis, and multi-format export — without leaving QGIS.
 
-![version](https://img.shields.io/badge/version-1.5.1-blue)
+![version](https://img.shields.io/badge/version-1.5.0-blue)
 [![QGIS](https://img.shields.io/badge/QGIS-3.16%2B-green?logo=qgis&logoColor=white)](https://qgis.org)
 ![license](https://img.shields.io/badge/license-GPL--2.0--or--later-brightgreen)
 [![Python](https://img.shields.io/badge/python-3.7%2B-blue?logo=python&logoColor=white)](https://www.python.org)
