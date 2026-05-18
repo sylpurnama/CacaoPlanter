@@ -1,10 +1,12 @@
 # CacaoPlanter
 
-[![QGIS](https://img.shields.io/badge/QGIS-3.16%2B-green)](https://qgis.org)
-[![License](https://img.shields.io/badge/License-GPL%202.0-blue)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.5.0-orange)](https://github.com/sylpurnama/CacaoPlanter)
+**CacaoPlanter** — Generate cacao and shade tree planting points with configurable patterns, topography analysis, and multi-format export — without leaving QGIS.
 
-**CacaoPlanter** is an open-source QGIS plugin for planning cacao (*Theobroma cacao*) and shade tree planting layouts directly on the map, with support for topographic analysis and multi-format export.
+![version](https://img.shields.io/badge/version-1.5.1-blue)
+[![QGIS](https://img.shields.io/badge/QGIS-3.16%2B-green?logo=qgis&logoColor=white)](https://qgis.org)
+![license](https://img.shields.io/badge/license-GPL--2.0--or--later-brightgreen)
+[![Python](https://img.shields.io/badge/python-3.7%2B-blue?logo=python&logoColor=white)](https://www.python.org)
+![QGIS review](https://img.shields.io/badge/QGIS%20review-under%20review-orange)
 
 ---
 
@@ -33,13 +35,15 @@
 
 ## Installation
 
-### From ZIP (recommended)
+### From QGIS Plugin Repository *(recommended)*
+1. QGIS → **Plugins** → **Manage and Install Plugins**
+2. Search for **CacaoPlanter**
+3. Click **Install Plugin**
+
+### From ZIP
 1. Download the latest release ZIP from [Releases](https://github.com/sylpurnama/CacaoPlanter/releases)
 2. QGIS → **Plugins** → **Manage and Install Plugins** → **Install from ZIP**
 3. Select the downloaded ZIP and click **Install Plugin**
-
-### From QGIS Plugin Repository
-Search for **CacaoPlanter** in the QGIS Plugin Repository.
 
 ---
 
@@ -61,8 +65,8 @@ Search for **CacaoPlanter** in the QGIS Plugin Repository.
 | DSM Drone | ✅ | Includes vegetation height; slope may be overestimated |
 | SRTM 30m | ✅ | Public DEM; limited precision on gentle slopes |
 | LiDAR DTM | ✅ | Very high accuracy |
-| RGB / Multispectral Ortophoto | ❌ | Used as visual basemap only |
-| No raster | ❌ | Fast-path mode — no I/O |
+| RGB / Multispectral Orthophoto | ❌ | Used as visual basemap only |
+| No raster | ❌ | Fast-path mode — no slope filtering |
 
 ---
 
